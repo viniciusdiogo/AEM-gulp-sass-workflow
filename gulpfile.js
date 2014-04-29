@@ -56,4 +56,4 @@ gulp.task('watch', function () {
 // 	});
 // });
 
-// curl http://www.cub.com/index.html -O
+// curl <http path> -O
