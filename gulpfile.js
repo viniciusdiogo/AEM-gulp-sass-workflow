@@ -12,7 +12,28 @@ var gulp = require('gulp'),
 	livereload = require('gulp-livereload'),
 	shell = require('gulp-shell');
 
+var http = require('http'),
+	fs = require('fs');
+
 var repo = '/Users/cozo002/workspace/svu-banners-cq5/components/src/main/content/jcr_root/etc/designs/svubanners';
+
+gulp.task('server', function () {
+	return fs.readFile('dev/index.html', function (err, html) {
+		if (err) {
+			throw err; 
+		}
+
+		http.createServer(function(req, res) {
+			console.log('req made');
+			if (req.url.length === 1) {
+				res.writeHeader(200, {"Content-Type": "text/html"});  
+				res.write(html);
+				res.end();
+				console.log('response written');
+			}
+		}).listen(8080);
+	});
+})
 
 gulp.task('styles', function() {
 	return gulp.src(repo + '**/*.scss')
@@ -26,8 +47,8 @@ gulp.task('styles', function() {
 });
 
 gulp.task('vault', ['styles'], function () {
-	return gulp.src(repo)
-	.pipe(shell(['vlt ci *'], {cwd: repo}));
+	// return gulp.src(repo)
+	// .pipe(shell(['vlt ci *'], {cwd: repo}));
 });
 
 // gulp.task('scripts', function() {
@@ -37,11 +58,8 @@ gulp.task('vault', ['styles'], function () {
 // 		.pipe(notify({ message: 'Scripts task complete' }));
 // });
 
-// gulp.task('default', ['styles', 'scripts', 'watch']);
 
-// gulp.task('default', ['styles', 'watch']);
-
-gulp.task('default', ['vault']);
+gulp.task('default', ['server']);
 
 
 gulp.task('watch', function () {
