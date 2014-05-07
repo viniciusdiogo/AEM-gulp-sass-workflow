@@ -3,3 +3,5 @@
 *.html
 node_modules
 dev/*
+.sass-cache
+clientlibs
