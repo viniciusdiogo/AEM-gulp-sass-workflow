@@ -1,3 +1,9 @@
+// User variables ** must be filled in with your data **
+
+var userName = 'cozo002';
+
+// Start app below
+
 var gulp = require('gulp'),
 	sass = require('gulp-ruby-sass')
 	// autoprefixer = require('gulp-autoprefixer'),
@@ -18,7 +24,7 @@ var gulp = require('gulp'),
 var http = require('http'),
 	fs = require('fs');
 
-var repo = '/Users/cozo002/workspace/svu-banners-cq5/components/src/main/content/jcr_root/etc/designs/svubanners';
+var repo = '/Users/' + userName + '/workspace/svu-banners-cq5/components/src/main/content/jcr_root/etc/designs/svubanners';
 
 var banner;
 var siteSection;
@@ -56,7 +62,7 @@ gulp.task('watch-styles', function () {
 // curl <http path> -Ok
 
 gulp.task('server', function () {
-	return fs.readFile('dev/index.html', function (err, html) {
+	return fs.readFile('index.html', function (err, html) {
 		if (err) {
 			throw err; 
 		}
