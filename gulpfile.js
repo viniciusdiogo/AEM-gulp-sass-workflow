@@ -5,21 +5,10 @@ var userName = 'cozo002';
 // Start app below
 
 var gulp = require('gulp'),
-	sass = require('gulp-ruby-sass')
-	// autoprefixer = require('gulp-autoprefixer'),
-	// minifycss = require('gulp-minify-css'),
-	// jshint = require('gulp-jshint'),
-	// uglify = require('gulp-uglify'),
-	// rename = require('gulp-rename'),
-	// clean = require('gulp-clean'),
-	// concat = require('gulp-concat'),
-	// cache = require('gulp-cache'),
-	// livereload = require('gulp-livereload'),
-	// shell = require('gulp-shell'),
-	// nd = require('gulp-nodemon'),
-	// watch = require('gulp-watch'),
-	// filter = require('gulp-filter')
-	;
+	sass = require('gulp-ruby-sass'),
+	express = require('express'),
+	lr = require('tiny-lr')(),
+	path = require('path');
 	
 var http = require('http'),
 	fs = require('fs');
@@ -48,8 +37,12 @@ gulp.task('watch-styles', function () {
 		var path = event.path.split('\\');
 		banner = path[path.length - 3];
 		siteSection = path[path.length - 1].split('.')[0];
+		// console.log(banner);
+		// console.log(siteSection);
 		gulp.run('styles');
 	});
+	// gulp.watch(repo + '/**/*.css', notifyLivereload);
+	gulp.watch(repo + '/shoppers/css/shoppers-homepage.css', notifyLivereload);
 });
 
 // gulp.task('watch', function() {
@@ -62,19 +55,25 @@ gulp.task('watch-styles', function () {
 // curl <http path> -Ok
 
 gulp.task('server', function () {
-	return fs.readFile('index.html', function (err, html) {
-		if (err) {
-			throw err; 
-		}
-
-		http.createServer(function(req, res) {
-			console.log('req made');
-			if (req.url.length === 1) {
-				res.writeHeader(200, {"Content-Type": "text/html", "Last-Modified": new Date()});  
-				res.write(html);
-				res.end();
-				console.log('response written');
-			}
-		}).listen(8080);
+	fs.readFile('./index.html', 'utf8', function (err, data) {
+		console.log(data);
 	});
+	var app = express();
+	app.use(express.static(__dirname));
+	app.listen(8080);
+	lr.listen(35729);
 });
+
+function notifyLivereload (event) {
+	var fileName = path.relative(__dirname, event.path);
+	console.log(fileName);
+	lr.changed({
+		body: {
+			files: [fileName]
+		}
+	});
+}
+
+// ../../master/
+
+// ../

@@ -9,3 +9,5 @@ apps
 etc
 *.xml
 .vlt
+content
+./*.png
