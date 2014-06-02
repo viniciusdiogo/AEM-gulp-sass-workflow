@@ -1,7 +1,9 @@
 AEM-gulp-sass-workflow
 ======================
 
-An "alternate" workflow for front end development for users of Adobe Experience Manager.  Features Gulp (node), SASS, and some weirdness.  Just getting started and not anywhere close to a working version.  More instructions to follow.
+An "alternate" workflow for front end development for users of Adobe Experience Manager.  Features Gulp (node), SASS, and some weirdness.  
+
+### Just getting started and not anywhere close to a working version.  Project is somewhat on hold due to environment (windows..) issues preventing me from getting a good grasp on the jcr ###
 
 ### Installation instructions: ###
 
