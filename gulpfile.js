@@ -13,10 +13,9 @@ var userName = 'cozo002';
 
 var gulp = require('gulp'),
 	sass = require('gulp-ruby-sass'),
-	express = require('express'),
 	lr = require('tiny-lr')(),
-	path = require('path'),
-	rename = require('gulp-rename');
+	rename = require('gulp-rename'),
+	shell = require('gulp-shell');
 	
 var http = require('http'),
 	fs = require('fs');
@@ -39,7 +38,17 @@ gulp.task('styles', function() {
 });
 
 // gulp.task('default', ['server', 'styles', 'watch']);
-gulp.task('default', ['server']);
+// gulp.task('default', ['server']);
+gulp.task('default', ['shell']);
+
+gulp.task('shell', function () {
+	return gulp.src('*.js', {read: false})
+		.pipe(shell([
+			'echo hello world',
+			'ls -l'
+		]));
+});
+
 
 
 gulp.task('watch', function () {

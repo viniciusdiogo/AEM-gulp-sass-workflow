@@ -7,11 +7,9 @@
     "gulp-ruby-sass": "^0.4.3",
     "gulp": "^3.6.2",
     "send": "^0.3.0",
-    "express": "^4.1.2",
-    "node-static": "^0.7.3",
     "tiny-lr": "0.0.7",
-    "path": "^0.4.9",
     "gulp-sass": "^0.7.1",
-    "gulp-rename": "^1.2.0"
+    "gulp-rename": "^1.2.0",
+    "gulp-shell": "~0.2.7"
   }
 }
