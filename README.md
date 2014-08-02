@@ -1,42 +1,43 @@
 AEM-gulp-sass-workflow
 ======================
 
-An "alternate" workflow for front end development for users of Adobe Experience Manager.  Features Gulp (node), SASS, and some weirdness.  
+A workflow for front end development for users of Adobe Experience Manager using gulpjs.
 
-### Just getting started and not anywhere close to a working version.  Project is somewhat on hold due to environment (windows..) issues preventing me from getting a good grasp on the jcr ###
+Use this to do tools for working with AEM's front end tasks.  This app does the following tasks:
+
+- SASS watch for changes to files, and then compile, minify, "vault" to JCR using cURL, and livereload the browser (Chrome only).
+- Javascript watch for changes to files, and then concat, minify, uglify, and vault to JCR.
+- Manually build local AEM instances via special commands, see below.
+
+The heart of this app is using cURL -T (essentially, send a file via HTTP POST) to send up compiled CSS and JS to the JCR without having to bother with vlt or (ugh) vaultclipse.  It is VERY fast and way better than any of the alternatives.  This allows you to decouple your front end assets from AEM and avoid clientlibraries.  This app will need heavy modification inside of the gulpfile to work at all!  See comments.
 
 ### Installation instructions: ###
 
-Download and install node.js and then
+Install node.js.  Install ruby http://www.rubyinstaller.org/.  Install sass:
 
->$ npm install gulp -g
+> gem install sass
 
-Don't clone this repo!  It needs to live in the jcr_root directory itself, not within a folder.  Install by:
+(optional) Install chrome livereload extension https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei and enable.
 
-Bash at jcr_root directory in your workspace
+Git clone this repo next to your main AEM repo - it must be a sibling. Then:
 
->$ git init
+> cd AEM-gulp-sass-workflow
 
->$ git remote add origin https://github.com/cozuya/AEM-gulp-sass-workflow.git
+> npm install -g gulp
 
->$ git pull origin master
+> npm install
 
-Obviously for some (many), you will already be inside of a git repo and this won't work.  The solution for this is either git submodule or.. copy and pasting this stuff in there.
 
-then
+## To start watching for changes: ##
 
->$ npm install gulp gulp-ruby-sass --save-dev
+> gulp
 
----
+In addition, this app can build AEM local instances without needing to go through eclipse or by "parsing" MVN poms.  The 4 commands are:
 
-Prior to development, run the following command from bash:
+> gulp build-publish
 
->$ curl -Ok <full URL of page you want to work on.  Does not necessarily need to be localhost:4503/2>
+> gulp build-publish-3rdpartyjars
 
-and then start app with
+> gulp build-author
 
->$ gulp
-
-and navigate your browser to http://localhost:8080.  Development best in Chrome and Firefox as they are the only ones to support SASS sourcemaps as of 5/2014.
-
-App works by piggybacking off of jcr_root's pathing from the front end - files will be "not really" be touched - they will, but not in the way you'd expect.  It generates a nodewebserver based off the html filed saved by the cURL command and then watches and compiles SASS and JS.  The advantage here that we decouple front end development from AEM - we do the gruntwork (wink) here in this app as opposed to having AEM do LESS and JS clientlibrary compilation.  The disadvantage is you need a virtual drive mounted in the JCR and AEM so far has not been happy with what I've been trying to do, so this project is on hold until I can figure that out.
+> gulp build-author-3rdpartyjars

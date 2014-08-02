@@ -1,15 +1,15 @@
 {
   "name": "AEM-gulp-sass-workflow",
-  "version": "1.0.0",
-  "description": "An \"alternate\" workflow for front end development for users of Adobe Experience Manager. Features Gulp (node), SASS, and some weirdness",
+  "version": "0.1.0",
+  "description": "A workflow for front end development for users of Adobe Experience Manager. Features gulp.js (node)",
   "repository": "https://github.com/cozuya/AEM-gulp-sass-workflow.git",
   "devDependencies": {
-    "gulp-ruby-sass": "^0.4.3",
-    "gulp": "^3.6.2",
-    "send": "^0.3.0",
-    "tiny-lr": "0.0.7",
-    "gulp-sass": "^0.7.1",
-    "gulp-rename": "^1.2.0",
-    "gulp-shell": "~0.2.7"
+    "gulp": "^3.8.6",
+    "gulp-ruby-sass": "^0.7.1",
+    "gulp-shell": "^0.2.7",
+    "gulp-print": "^1.1.0",
+    "gulp-concat": "^2.3.4",
+    "gulp-uglify": "^0.3.1",
+    "gulp-livereload": "^2.1.0",
   }
 }

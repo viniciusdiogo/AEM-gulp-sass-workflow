@@ -1,81 +1,96 @@
-// curl <http path> -Ok
-
-// master background images need to moved from
-// ../
-// to
-// ../../master/
-
-// User variables ** must be filled in with your data **
-
-var userName = 'cozo002';
-
-// Start app below
-
 var gulp = require('gulp'),
 	sass = require('gulp-ruby-sass'),
-	lr = require('tiny-lr')(),
-	rename = require('gulp-rename'),
-	shell = require('gulp-shell');
-	
-var http = require('http'),
-	fs = require('fs');
+	shell = require('gulp-shell'),
+	concat = require('gulp-concat'),
+	uglify = require('gulp-uglify'),
+	print = require('gulp-print'),
+	livereload = require('gulp-livereload');
 
-var repo = '/Users/' + userName + '/workspace/svu-banners-cq5/components/src/main/content/jcr_root/etc/designs/svubanners';
+gulp.task('default', ['watch']);
 
-var banner;
-var siteSection;
+var fileName;
 
-gulp.task('styles', function() {
-	return gulp.src(repo + '/' + banner + '/css/' + banner + '-' + siteSection + '.scss')
-		.pipe(sass({
-			style: 'expanded',
-			sourcemap: true
-		}))
-		// .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
-		// .pipe(rename({suffix: '.min'}))
-		// .pipe(minifycss())
-		.pipe(gulp.dest(repo + '/' + banner + '/css'));
-});
-
-// gulp.task('default', ['server', 'styles', 'watch']);
-// gulp.task('default', ['server']);
-gulp.task('default', ['shell']);
-
-gulp.task('shell', function () {
-	return gulp.src('*.js', {read: false})
-		.pipe(shell([
-			'echo hello world',
-			'ls -l'
-		]));
-});
-
-
+// Watch events
 
 gulp.task('watch', function () {
-	gulp.watch(repo + '/**/*.scss', function (event) {
-		var path = event.path.split('\\');
-		banner = path[path.length - 3];
-		siteSection = path[path.length - 1].split('.')[0];
-		gulp.run('styles');
+	livereload.listen();
+
+	gulp.watch('path/to/*.scss', function (event) {
+		var path = event.path.split('\\');  // windows here obviously, osx will be different.
+		fileName = path[path.length - 1];
+		gulp.start('curl-vault-single');  // if you have only one main/master CSS file you can switch this to look like the JS task.
 	});
-	gulp.watch(repo + '/shoppers/css/shoppers-homepage.css', notifyLivereload);
+
+	gulp.watch('path/to/*.js', ['javascripts']);
+
 });
 
-gulp.task('server', function () {
-	fs.readFile('./index.html', 'utf8', function (err, data) {
-		// console.log(data);
-	});
-	var app = express();
-	app.use(express.static(__dirname));
-	app.listen(8080);
-	lr.listen(35729);
+// Styles tasks
+
+gulp.task('styles', function() {
+	return gulp.src('path/to/scss-folder/' + fileName)
+		.pipe(sass({
+			style: 'compressed',  // cannot gulp-minify css with sourcemaps as of time of writing
+			sourcemap: true,
+			sourcemapPath: 'path/to/scss-folder/'
+		}))
+		.pipe(gulp.dest('path/to/css-folder/');
 });
 
-function notifyLivereload (event) {
-	var fileName = path.relative(__dirname, event.path);
-	lr.changed({
-		body: {
-			files: [fileName]
-		}
-	});
-}
+gulp.task('curl-vault', ['styles'], function () {
+	return gulp.src('')
+		.pipe(shell([
+			'curl -u admin:admin -s -T ' + fileName + ' http://absolute/path/to/jcr_root' + fileName,
+			'curl -u admin:admin -s -T ' + fileName + '.map' + ' http://absolute/path/to/jcr_root' fileName + '.map'
+		], {cwd: 'path/to/css-folder/'}))
+		.pipe(livereload());
+});
+
+
+// Javascript tasks
+
+gulp.task('javascripts', function () {  // assumes one master JS file
+	return gulp.src('path/to/js-folder/*.js')
+		.pipe(concat('general.js'))
+		.pipe(uglify())
+		.pipe(print(function (filepath) {
+			var file = filepath.split('\\')[filepath.split('\\').length - 1];
+			return 'Built: ' + file;
+		}))
+		.pipe(gulp.dest('path/to/js-folder/'))
+		.pipe(shell([
+			'curl -u admin:admin -s -T general.js http://absolute/path/to/jcr_root/javascripts/general.js'
+		], {cwd: 'path/to/js-folder/'}))
+		.pipe(livereload());
+});
+
+
+// build scripts
+
+gulp.task('build-publish', function () {
+	return gulp.src('')
+		.pipe(shell([
+			'mvn clean install -Dcrx.url=http://localhost:4503 -Dsling.install.skip=true -Dcq5.install.skip=false'
+		], {cwd: '../your-main-AEM-repository/'}));
+});
+
+gulp.task('build-publish-3rdpartyjars', function () {
+	return gulp.src('')
+		.pipe(shell([
+			'mvn clean install sling:install -Dcrx.url=http://localhost:4503 -Dsling.install.skip=false'
+		], {cwd: '../your-main-AEM-repository/'}));
+});
+
+gulp.task('build-author', function () {
+	return gulp.src('')
+		.pipe(shell([
+			'mvn clean install -Dsling.install.skip=true -Dcq5.install.skip=false'
+		], {cwd: '../your-main-AEM-repository/'}));
+});
+
+gulp.task('build-author-3rdpartyjars', function () {
+	return gulp.src('')
+		.pipe(shell([
+			'mvn clean install sling:install -Dsling.install.skip=false'
+		], {cwd: '../your-main-AEM-repository/'}));
+});
