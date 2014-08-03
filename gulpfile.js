@@ -55,7 +55,7 @@ gulp.task('javascripts', function () {  // assumes one master JS file
 		.pipe(concat('general.js'))
 		.pipe(uglify())
 		.pipe(print(function (filepath) {
-			var file = filepath.split('\\')[filepath.split('\\').length - 1];
+			var file = filepath.split('\\')[filepath.split('\\').length - 1];  // windows
 			return 'Built: ' + file;
 		}))
 		.pipe(gulp.dest('path/to/js-folder/'))
@@ -94,4 +94,10 @@ gulp.task('build-author-3rdpartyjars', function () {
 		.pipe(shell([
 			'mvn clean install sling:install -Dsling.install.skip=false'
 		], {cwd: '../your-main-AEM-repository/'}));
+});
+
+
+gulp.task('x', function () {
+	var y = fs.readFileSync('./test.xml', 'utf8');
+	console.log(y.match(/<words>(.+?)<\/words>/)[1]);
 });
