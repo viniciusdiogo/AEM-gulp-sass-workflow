@@ -4,7 +4,8 @@ var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	uglify = require('gulp-uglify'),
 	print = require('gulp-print'),
-	livereload = require('gulp-livereload');
+	livereload = require('gulp-livereload'),
+	fs = require('fs');
 
 gulp.task('default', ['watch']);
 
@@ -34,14 +35,14 @@ gulp.task('styles', function() {
 			sourcemap: true,
 			sourcemapPath: 'path/to/scss-folder/'
 		}))
-		.pipe(gulp.dest('path/to/css-folder/');
+		.pipe(gulp.dest('path/to/css-folder/'));
 });
 
 gulp.task('curl-vault', ['styles'], function () {
 	return gulp.src('')
 		.pipe(shell([
 			'curl -u admin:admin -s -T ' + fileName + ' http://absolute/path/to/jcr_root' + fileName,
-			'curl -u admin:admin -s -T ' + fileName + '.map' + ' http://absolute/path/to/jcr_root' fileName + '.map'
+			'curl -u admin:admin -s -T ' + fileName + '.map' + ' http://absolute/path/to/jcr_root' + fileName + '.map'
 		], {cwd: 'path/to/css-folder/'}))
 		.pipe(livereload());
 });
