@@ -28,7 +28,7 @@ Git clone this repo next to your main AEM repo - it must be a sibling. Then:
 > npm install
 
 
-## To start watching for changes: ##
+### To start watching for changes: ###
 
 > gulp
 
