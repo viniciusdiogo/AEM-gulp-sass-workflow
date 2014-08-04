@@ -95,9 +95,3 @@ gulp.task('build-author-3rdpartyjars', function () {
 			'mvn clean install sling:install -Dsling.install.skip=false'
 		], {cwd: '../your-main-AEM-repository/'}));
 });
-
-
-gulp.task('x', function () {
-	var y = fs.readFileSync('./test.xml', 'utf8');
-	console.log(y.match(/<words>(.+?)<\/words>/)[1]);
-});
