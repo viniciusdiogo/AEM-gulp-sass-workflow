@@ -5,8 +5,8 @@ A workflow for front end development for users of Adobe Experience Manager using
 
 Use this to do tools for working with AEM's front end tasks.  This app does the following tasks:
 
-- SASS watch for changes to files, and then compile, create sourcemap, minify, "vault" to JCR using cURL, and livereload the browser (Chrome only).
-- Javascript watch for changes to files, and then concat, minify, uglify, and vault to JCR.
+- SASS watch for changes to files, and then compile, create sourcemap, compress, "vault" to JCR using cURL, and livereload the browser (Chrome only).
+- Javascript watch for changes to files, and then concat, minify, uglify, vault, livereload.
 - Manually build local AEM instances via special commands, see below.
 
 The heart of this app is using cURL -T (essentially, send a file via HTTP POST) to send up compiled CSS and JS to the JCR without having to bother with vlt or (ugh) vaultclipse.  It is VERY fast and way better than any of the alternatives.  This allows you to decouple your front end assets from AEM and avoid clientlibraries which as of at least 5.6 have caused constant headaches.  This app will need heavy modification inside of the gulpfile to work at all!  See comments.
@@ -29,11 +29,11 @@ Git clone this repo next to your main AEM repo - it must be a sibling (or you'll
 
 Edit the gulpfile in a way that makes sense relative to your AEM repo.
 
-### To start watching for changes: ###
+### To start watching for changes and process any images in the /input folder: ###
 
 > gulp
 
-In addition, this app can build AEM local instances without needing to go through eclipse.  This is hard coded in and I will probably regex parse this in the near future.  The 4 commands are:
+In addition, this app can build AEM local instances without needing to go through eclipse.  This is hard coded in and will depend on the innards of your .BUILD files and almost certainly need to be manually tweaked.  The 4 commands are:
 
 > gulp build-publish
 
