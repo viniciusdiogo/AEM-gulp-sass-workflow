@@ -27,7 +27,7 @@ Git clone this repo next to your main AEM repo - it must be a sibling (or you'll
 
 Edit the gulpfile in a way that makes sense relative to your AEM repo.
 
-### To start watching for changes and process any images in the /input folder: ###
+### To start watching for changes: ###
 
 > gulp
 
