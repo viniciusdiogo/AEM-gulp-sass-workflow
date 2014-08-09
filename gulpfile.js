@@ -3,9 +3,9 @@ var gulp = require('gulp'),
 	shell = require('gulp-shell'),
 	concat = require('gulp-concat'),
 	uglify = require('gulp-uglify'),
-	print = require('gulp-print'),
 	livereload = require('gulp-livereload'),
-	fs = require('fs');
+	jssourcemaps = require('gulp-sourcemaps'),
+	notify = require('gulp-notify');
 
 gulp.task('default', ['watch']);
 
@@ -44,6 +44,12 @@ gulp.task('curl-vault', ['styles'], function () {
 			'curl -u admin:admin -s -T ' + fileName + ' http://absolute/path/to/jcr_root' + fileName,
 			'curl -u admin:admin -s -T ' + fileName + '.map' + ' http://absolute/path/to/jcr_root' + fileName + '.map'
 		], {cwd: 'path/to/css-folder/'}))
+		.pipe(notify({
+			onLast: true,
+			title: 'CSS complete',
+			message: ' ',
+			icon: path.join(__dirname, "growl-icons/css.jpg")
+		}))
 		.pipe(livereload());
 });
 
@@ -52,16 +58,20 @@ gulp.task('curl-vault', ['styles'], function () {
 
 gulp.task('javascripts', function () {  // assumes one master JS file
 	return gulp.src('path/to/js-folder/*.js')
+		.pipe(jssourcemaps.init())
 		.pipe(concat('general.js'))
 		.pipe(uglify())
-		.pipe(print(function (filepath) {
-			var file = filepath.split('\\')[filepath.split('\\').length - 1];  // windows
-			return 'Built: ' + file;
-		}))
+		.pipe(jssourcemaps.write())
 		.pipe(gulp.dest('path/to/js-folder/'))
 		.pipe(shell([
 			'curl -u admin:admin -s -T general.js http://absolute/path/to/jcr_root/javascripts/general.js'
 		], {cwd: 'path/to/js-folder/'}))
+		.pipe(notify({
+			onLast: true,
+			title: 'Javascripts complete',
+			message: ' ',
+			icon: path.join(__dirname, "growl-icons/js.png")
+		}))		
 		.pipe(livereload());
 });
 

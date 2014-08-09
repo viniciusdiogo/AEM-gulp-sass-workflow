@@ -10,6 +10,8 @@
     "gulp-print": "^1.1.0",
     "gulp-concat": "^2.3.4",
     "gulp-uglify": "^0.3.1",
-    "gulp-livereload": "^2.1.0"
+    "gulp-livereload": "^2.1.0",
+    "gulp-sourcemaps": "^1.1.1",
+    "gulp-notify": "^1.4.2"
   }
 }
