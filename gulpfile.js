@@ -5,7 +5,8 @@ var gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
 	livereload = require('gulp-livereload'),
 	jssourcemaps = require('gulp-sourcemaps'),
-	notify = require('gulp-notify');
+	notify = require('gulp-notify'),
+	plumber = require('gulp-plumber');
 
 gulp.task('default', ['watch']);
 
@@ -30,6 +31,7 @@ gulp.task('watch', function () {
 
 gulp.task('styles', function() {
 	return gulp.src('path/to/scss-folder/' + fileName)
+		.pipe(plumber)
 		.pipe(sass({
 			style: 'compressed',  // cannot gulp-minify css with sourcemaps as of time of writing
 			sourcemap: true,
@@ -40,6 +42,7 @@ gulp.task('styles', function() {
 
 gulp.task('curl-vault', ['styles'], function () {
 	return gulp.src('')
+		.pipe(plumber)
 		.pipe(shell([
 			'curl -u admin:admin -s -T ' + fileName + ' http://absolute/path/to/jcr_root' + fileName,
 			'curl -u admin:admin -s -T ' + fileName + '.map' + ' http://absolute/path/to/jcr_root' + fileName + '.map'
@@ -58,6 +61,7 @@ gulp.task('curl-vault', ['styles'], function () {
 
 gulp.task('javascripts', function () {  // assumes one master JS file
 	return gulp.src('path/to/js-folder/*.js')
+		.pipe(plumber)
 		.pipe(jssourcemaps.init())
 		.pipe(concat('general.js'))
 		.pipe(uglify())
