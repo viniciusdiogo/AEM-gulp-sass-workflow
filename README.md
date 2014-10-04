@@ -1,7 +1,7 @@
 AEM-gulp-sass-workflow
 ======================
 
-A workflow for front end development for users of Adobe Experience Manager aka Adobe CQ using gulpjs.
+A workflow for front end development for users of Adobe Experience Manager aka Adobe CQ using gulpjs.  Warning: this requires a decent amount of gulp knowledge.  But its worth it.
 
 Use this to do tools for working with AEM's front end tasks.  This app does the following tasks:
 
@@ -9,7 +9,9 @@ Use this to do tools for working with AEM's front end tasks.  This app does the 
 - Javascript watch for changes to files, and then concat, minify, uglify, create inline sourcemap, vault, livereload.
 - Manually build local AEM instances via special commands, see below.
 
-The heart of this app is using cURL -T (essentially, send a file via HTTP POST) to send up compiled CSS and JS to the JCR without having to bother with vlt or (ugh) vaultclipse.  It is VERY fast and way better than any of the alternatives.  This allows you to decouple your front end assets from AEM and avoid clientlibraries which as of at least 5.6 have caused constant headaches.  This app will need heavy modification inside of the gulpfile to work at all!  See comments.
+The heart of this app is using cURL -T (send a file via HTTP POST) to send up compiled CSS and JS to the JCR without having to bother with vlt or (ugh) vaultclipse.  It is VERY fast and way better than any of the alternatives.  This allows you to decouple your front end assets from AEM and avoid clientlibraries which as of at least 5.6 have caused constant headaches, to me at least.  Also of course allows you to use SASS at all.  Be careful with the order (alphabetical) of your pre-concatted javascript files!  I haven't had a lot of luck with gulp-order and that is excluded from this app for now.
+
+## This app will need heavy modification inside of the gulpfile to work at all!  See comments. ##
 
 ### Installation instructions: ###
 
@@ -25,7 +27,7 @@ Git clone this repo next to your main AEM repo - it must be a sibling (or you'll
 
 > npm install
 
-Edit the gulpfile in a way that makes sense relative to your AEM repo.
+Edit the gulpfile in a way that makes sense relative to your AEM codebase repo, not your AEM installation.
 
 ### To start watching for changes: ###
 

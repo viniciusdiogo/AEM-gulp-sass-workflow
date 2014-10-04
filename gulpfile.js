@@ -6,46 +6,55 @@ var gulp = require('gulp'),
 	livereload = require('gulp-livereload'),
 	jssourcemaps = require('gulp-sourcemaps'),
 	notify = require('gulp-notify'),
-	plumber = require('gulp-plumber');
+	plumber = require('gulp-plumber'),
+	gutil = require('gulp-util');
 
 gulp.task('default', ['watch']);
 
 var fileName;
+
+var beepError = function (err) {
+	gutil.beep();
+	console.log(err);
+}
 
 // Watch events
 
 gulp.task('watch', function () {
 	livereload.listen();
 
-	gulp.watch('path/to/*.scss', function (event) {
-		var path = event.path.split('\\');  // windows here obviously, osx will be different.
+	gulp.watch('path/to/scss-folder/*.scss', function (event) {
+		var path = event.path.split('\\');  // windows here obviously, osx will be different and frankly has not been tested with this app.
 		fileName = path[path.length - 1];
-		gulp.start('curl-vault-single');  // if you have only one main/master CSS file you can switch this to look like the JS task.
+		gulp.start('curl-vault-css');  // if you have only one main/master CSS file you can switch this to look like the JS task.
 	});
 
 	gulp.watch('path/to/*.js', ['javascripts']);
-
 });
 
 // Styles tasks
 
 gulp.task('styles', function() {
 	return gulp.src('path/to/scss-folder/' + fileName)
-		.pipe(plumber)
+		.pipe(plumber({
+			errorHandler: beepError
+		}))
 		.pipe(sass({
-			style: 'compressed',  // cannot gulp-minify css with sourcemaps as of time of writing
+			style: 'compressed',  // cannot gulp-minify css with sourcemaps as of time of writing but this is ~10% larger.
 			sourcemap: true,
 			sourcemapPath: 'path/to/scss-folder/'
 		}))
 		.pipe(gulp.dest('path/to/css-folder/'));
 });
 
-gulp.task('curl-vault', ['styles'], function () {
+gulp.task('curl-vault-css', ['styles'], function () {
 	return gulp.src('')
-		.pipe(plumber)
+		.pipe(plumber({
+			errorHandler: beepError
+		}))
 		.pipe(shell([
-			'curl -u admin:admin -s -T ' + fileName + ' http://absolute/path/to/jcr_root' + fileName,
-			'curl -u admin:admin -s -T ' + fileName + '.map' + ' http://absolute/path/to/jcr_root' + fileName + '.map'
+			'curl -u admin:admin -s -T ' + fileName + ' http://localhost:4503/path/to/css-folder/' + fileName,  
+			'curl -u admin:admin -s -T ' + fileName + '.map' + ' http://localhost:4503/path/to/css-folder/' + fileName + '.map'
 		], {cwd: 'path/to/css-folder/'}))
 		.pipe(notify({
 			onLast: true,
@@ -61,14 +70,16 @@ gulp.task('curl-vault', ['styles'], function () {
 
 gulp.task('javascripts', function () {  // assumes one master JS file
 	return gulp.src('path/to/js-folder/*.js')
-		.pipe(plumber)
+		.pipe(plumber({
+			errorHandler: beepError
+		}))
 		.pipe(jssourcemaps.init())
-		.pipe(concat('general.js'))
+		.pipe(concat('combined-general.js'))
 		.pipe(uglify())
 		.pipe(jssourcemaps.write())
-		.pipe(gulp.dest('path/to/js-folder/'))
+		.pipe(gulp.dest('path/to/js-folder/'))  // inside of JCR
 		.pipe(shell([
-			'curl -u admin:admin -s -T general.js http://absolute/path/to/jcr_root/javascripts/general.js'
+			'curl -u admin:admin -s -T combined-general.js http://localhost:4503/path/to/js-folder/combined-general.js'
 		], {cwd: 'path/to/js-folder/'}))
 		.pipe(notify({
 			onLast: true,
