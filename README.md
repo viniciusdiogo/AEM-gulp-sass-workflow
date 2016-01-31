@@ -15,7 +15,7 @@ The heart of this app is using cURL -T (send a file via HTTP POST) to send up co
 
 ### Installation instructions: ###
 
-Install node.js http://nodejs.org/download/.  Install ruby http://www.rubyinstaller.org/.  Install chrome livereload extension https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei and click the extension button on your localhost page instance.  Install and run growl (windows users) http://www.growlforwindows.com/gfw/. Install sass:
+Install node.js http://nodejs.org/download/.  Install ruby http://rubyinstaller.org/.  Install chrome livereload extension https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei and click the extension button on your localhost page instance.  Install and run growl (windows users) http://www.growlforwindows.com/gfw/. Install sass:
 
 > gem install sass
 
